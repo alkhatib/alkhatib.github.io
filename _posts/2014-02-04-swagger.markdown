@@ -5,8 +5,6 @@ date: Thu 30 Jan 2014 16:05:06 EST
 tags: api prototyping
 ---
 
------------------
-
 Swagger is an impressive little tool I came across to help working with REST APIs.
 Here is a brief description taken directly from the [swagger](https://helloreverb.com/developers/swagger) website: 
 
