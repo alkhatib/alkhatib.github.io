@@ -1,0 +1,152 @@
+---
+layout: post
+title: "Swagger for API Visualisation and Testing"
+date: Thu 30 Jan 2014 16:05:06 EST
+tags: api prototyping
+---
+
+Viualise your API
+-----------------
+
+Swagger is an impressive little tool I came across to help working with REST APIs.
+Here is a brief description taken directly from the [swagger](https://helloreverb.com/developers/swagger) website: 
+
+
+```
+Swagger is a specification and complete framework implementation for 
+describing, producing, consuming, and visualizing RESTful web services.
+```
+
+The ultimate goal of Swagger is to keep your documentation up to date with your production code, which is a goal well worth striving for for all your documentation.
+
+A secondary benefit, is the ability to present a sandbox that allows Developers to quickly test your API. Even allowing non-programmers to make API calls right from your documentation website.
+
+An excellent example I came across for this is the new [Marvel Comics API](http://developer.marvel.com/)
+
+They present a page to allow developers to test calls direcly from the website, calling it the [Interactive API Tester](http://developer.marvel.com/docs)
+
+I immediately recognised the Swagger UI, since I have been using it to create a simple frontend for an API I was working with.
+
+This is another use case for swagger, if you are working with an API that doesn't provide the swagger resources, it allows you to write them yourself. 
+
+I gave it a trial with the RTBkit Banker API, and had to write up a couple of json files describing the API calls available.
+
+I'll list as an example one call and the swagger files I had to write.
+
+I started with the documentation of the API call from the [rtbkit wiki](https://github.com/rtbkit/rtbkit/wiki/Banker-JSON-API):
+
+```
+GET /v1/accounts
+
+    This command returns the hierachical list of available accounts 
+    as a JSON array of arrays of strings.
+
+    parameters:
+
+        maxDepth:
+            an integer describing the maximum length at which keys 
+            will be sought (default: unlimited)
+        accountPrefix:
+            a string that specifies the prefix against which the 
+            returned account names will be matched 
+
+```
+
+Two files are needed by the swagger-ui to discover and present this API call.
+
+1. A Resources Listing ```api-docs.json```
+
+{%highlight json linenos %}
+{
+  "apiVersion": "0.1",
+  "swaggerVersion": "1.2",
+  
+  "apis": [
+    {
+        "path":"http://localhost:31338/doc/accounts",
+        "description":"Accounts actions"
+    }
+  ]
+}
+{% endhighlight %}
+
+Note: I am using the simple server on my localhost, but you can point the ```path``` to wherever you are hosting these files.
+
+2. An API Declaration
+
+{% highlight json linenos %}
+{
+    "apiVersion": "0.1",
+    "swaggerVersion": "1.2",
+    "basePath": "http://my.rtbkit.sandbox.url:9985/v1",
+    "resourcePath": "/accounts",
+    "apis": [
+    {
+        "path":"/accounts",
+        "operations": [
+        {
+            "method":"GET",
+            "summary": "Find accounts",
+            "notes": "Any special usage notes can go here",
+            "nickname":"getAccounts",
+            "parameters": [
+            {
+                "paramType":"query",
+                "name":"maxDepth",
+                "description":"An integer describing the maximum length at which keys will be sought (default: unlimited)",
+                "dataType":"integer",
+                "format":"int64",
+                "required":false
+            },
+            {
+                "paramType":"query",
+                "name":"accountPrefix",
+                "description":"A string that specifies the prefix against which the returned account names will be matched",
+                "dataType":"string",
+                "format":"string",
+                "required":false
+            }
+            ]
+        }
+        ],   
+        "description":"This command returns the hierachical list of available accounts as a JSON array of arrays of strings."
+    }
+    ]
+}
+{% endhighlight %}
+
+I was able to run the swagger-ui locally, with a simple python server serving up the ```api-docs.json``` file and the  ```accounts.json``` files describing the api calls available. 
+
+One problem I encountered and you need to consider, any server you use to host the json files needed by Swagger should have CORS enabled, there is more information available on the swagger wiki, [CORS](https://github.com/wordnik/swagger-core/wiki/CORS)
+
+The Python SimpleHttpServer modified to do just that is what I used to serve them locally.
+The gist can be found here:
+[https://gist.github.com/enjalot/2904124](https://gist.github.com/enjalot/2904124)
+
+
+Starting the swagger-ui is as simple as cloning the repository and using the pre-built ```dist``` folder:
+
+```
+git clone git@github.com:wordnik/swagger-ui.git
+```
+
+
+```
+open dist/index.html
+```
+
+And then point it to the api-doc.json file. For me that was on the following url:
+
+{% highlight raw %}
+http://localhost:31338/doc/api-doc.json
+{% endhighlight %}
+
+And this is what the UI looks like for this call:
+
+<img src="{{ site.url }}/assets/swagger-screenshot.png" alt="Swagger UI for account GET call" style="width: 650px;"/>
+
+Then through the user interface I was able to make a call by filling in some parameters to the server hosting the API endpoint.
+
+Overall, it is an extremely useful tool and I would recommend checking it out.
+
+More swagger related projects exist you may want to check them out too: https://github.com/wordnik
