@@ -1,23 +1,21 @@
 ---
 layout: post
-title: "Swagger for API Visualisation and Testing"
+title: "Viualise any API using Swagger"
 date: Thu 30 Jan 2014 16:05:06 EST
 tags: api prototyping
 ---
 
-Viualise your API
 -----------------
 
 Swagger is an impressive little tool I came across to help working with REST APIs.
 Here is a brief description taken directly from the [swagger](https://helloreverb.com/developers/swagger) website: 
-
 
 ```
 Swagger is a specification and complete framework implementation for 
 describing, producing, consuming, and visualizing RESTful web services.
 ```
 
-The ultimate goal of Swagger is to keep your documentation up to date with your production code, which is a goal well worth striving for for all your documentation.
+The ultimate goal of Swagger is to keep your documentation up to date with your production code, which is a goal well worth striving for in all our documentation.
 
 A secondary benefit, is the ability to present a sandbox that allows Developers to quickly test your API. Even allowing non-programmers to make API calls right from your documentation website.
 
